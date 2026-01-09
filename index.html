@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="transcript">
+            <!-- File Upload Area -->
+            <div class="JSON-input" id="JSONinput">
+                <p class="upload-text">Drag and drop JSON file here</p>
+                <input type="file" id="fileInput" accept=".json" hidden>
+            </div>
+            <!-- Text Input Area -->
+            <div class="text-input">
+                <textarea
+                    id="textInput"
+                    placeholder="Paste transcript here..."
+                    spellcheck="false"
+                ></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
