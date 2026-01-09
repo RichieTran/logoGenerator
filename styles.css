@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI';
+    background-color: #ffffff;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+}
+
+.transcript {
+    display: flex;
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.JSON-input {
+    flex: 0 0 350px;
+    border: 2px dashed #cccccc;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    min-height: 400px;
+}
+
+.JSON-input:hover {
+    border-color: #888888;
+    background-color: #f5f5f5;
+}
+
+.JSON-input.drag-over {
+    border-color: #000000;
+    background-color: #f0f0f0;
+}
+
+.upload-text {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 0.5rem;
+}
+
+.upload-subtext {
+    font-size: 0.875rem;
+    color: #888888;
+}
+
+.text-input{
+    flex: 1;
+    display: flex;
+    min-width: 0;
+}
+
+.text-input textarea {
+    width: 100%;
+    min-height: 400px;
+    padding: 1.5rem;
+    border: 2px solid #cccccc;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.text-input textarea:focus {
+    outline: none;
+    border-color: #000000;
+    background-color: #ffffff;
+}
+
+.text-input textarea::placeholder {
+    color: #999999;
+}
+
+@media (max-width: 768px) {
+    .transcript {
+        flex-direction: column;
+    }
+    .JSON-input {
+        min-height: 250px;
+    }
+    .text-input textarea {
+        min-height: 300px;
+    }
+}
