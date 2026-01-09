@@ -51,6 +51,11 @@ body {
     background-color: #f0f0f0;
 }
 
+.upload-icon {
+    color: #666666;
+    margin-bottom: 1rem;
+}
+
 .upload-text {
     font-size: 1.125rem;
     font-weight: 500;
