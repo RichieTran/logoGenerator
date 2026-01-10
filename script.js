@@ -89,7 +89,6 @@ submitButton.addEventListener('click', async () => {
     try {
         console.log('Making API request...');
 
-        // Call backend API to extract data
         const response = await fetch('http://localhost:3000/api/extract', {
             method: 'POST',
             headers: {
@@ -129,68 +128,61 @@ submitButton.addEventListener('click', async () => {
 
 // Display extracted data in modal
 function displayExtractedData(data) {
-    let html = '';
+    let html = `
+        <div class="info-section">
+            <h3>Company Name</h3>
+            <input type="text" id="companyName" value="${data.company_name || ''}"
+                   style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+        </div>
 
-    if (data.company_name) {
-        html += `
-            <div class="info-section">
-                <h3>Company Name</h3>
-                <p>${data.company_name}</p>
+        <div class="info-section">
+            <h3>Industry</h3>
+            <input type="text" id="industry" value="${data.industry || ''}"
+                   style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+        </div>
+
+        <div class="info-section">
+            <h3>Core Values</h3>
+            <div id="valuesContainer">
+                ${(data.values || []).map((value, index) => `
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="text" class="value-input" value="${value}"
+                               style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+                        <button onclick="removeValue(${index})"
+                                style="width: 32px; height: 32px; background-color: #000; color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; font-weight: 600;">−</button>
+                    </div>
+                `).join('')}
             </div>
-        `;
-    }
+            <button id="addValue" style="width: 32px; height: 32px; background-color: #000; color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; margin-top: 0.5rem; font-weight: 600;">+</button>
+        </div>
 
-    if (data.industry) {
-        html += `
-            <div class="info-section">
-                <h3>Industry</h3>
-                <p>${data.industry}</p>
+        <div class="info-section">
+            <h3>Brand Tone</h3>
+            <input type="text" id="tone" value="${data.tone || ''}"
+                   style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+        </div>
+
+        <div class="info-section">
+            <h3>Competitors</h3>
+            <div id="competitorsContainer">
+                ${(data.competitors || []).map((comp, index) => `
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="text" class="competitor-input" value="${comp}"
+                               style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+                        <button onclick="removeCompetitor(${index})"
+                                style="width: 32px; height: 32px; background-color: #000; color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; font-weight: 600;">−</button>
+                    </div>
+                `).join('')}
             </div>
-        `;
-    }
+            <button id="addCompetitor" style="width: 32px; height: 32px; background-color: #000; color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; margin-top: 0.5rem; font-weight: 600;">+</button>
+        </div>
 
-    if (data.values && Array.isArray(data.values)) {
-        html += `
-            <div class="info-section">
-                <h3>Core Values</h3>
-                <ul>
-                    ${data.values.map(value => `<li>${value}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
+        <div class="info-section">
+            <h3>Target Users</h3>
+            <textarea id="targetUsers" rows="3"
+                      style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; resize: none; font-family: inherit;">${data.target_users || ''}</textarea>
+        </div>
 
-    if (data.tone) {
-        html += `
-            <div class="info-section">
-                <h3>Brand Tone</h3>
-                <p>${data.tone}</p>
-            </div>
-        `;
-    }
-
-    if (data.competitors && Array.isArray(data.competitors)) {
-        html += `
-            <div class="info-section">
-                <h3>Competitors</h3>
-                <ul>
-                    ${data.competitors.map(comp => `<li>${comp}</li>`).join('')}
-                </ul>
-            </div>
-        `;
-    }
-
-    if (data.target_users) {
-        html += `
-            <div class="info-section">
-                <h3>Target Users</h3>
-                <p>${data.target_users}</p>
-            </div>
-        `;
-    }
-
-    // Add Generate Logos button
-    html += `
         <button class="generate-logos-button" id="generateLogos">
             Generate Logos
         </button>
@@ -199,9 +191,61 @@ function displayExtractedData(data) {
     modalBody.innerHTML = html;
     resultsModal.classList.add('active');
 
-    // Add event listener to generate logos button
-    document.getElementById('generateLogos').addEventListener('click', generateLogos);
+    document.querySelector('.modal-header h2').textContent = 'Company Information';
+
+    document.getElementById('generateLogos').addEventListener('click', () => {
+        extractedData = {
+            company_name: document.getElementById('companyName').value,
+            industry: document.getElementById('industry').value,
+            values: Array.from(document.querySelectorAll('.value-input')).map(input => input.value).filter(v => v.trim()),
+            tone: document.getElementById('tone').value,
+            competitors: Array.from(document.querySelectorAll('.competitor-input')).map(input => input.value).filter(c => c.trim()),
+            target_users: document.getElementById('targetUsers').value
+        };
+        generateLogos();
+    });
+
+    document.getElementById('addValue').addEventListener('click', () => {
+        const container = document.getElementById('valuesContainer');
+        const index = document.querySelectorAll('.value-input').length;
+        const newInput = document.createElement('div');
+        newInput.style.cssText = 'display: flex; gap: 0.5rem; margin-bottom: 0.5rem;';
+        newInput.innerHTML = `
+            <input type="text" class="value-input" placeholder="Enter value"
+                   style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+            <button onclick="this.parentElement.remove()"
+                    style="width: 32px; height: 32px; background-color: #000; color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; font-weight: 600;">−</button>
+        `;
+        container.appendChild(newInput);
+    });
+
+    document.getElementById('addCompetitor').addEventListener('click', () => {
+        const container = document.getElementById('competitorsContainer');
+        const newInput = document.createElement('div');
+        newInput.style.cssText = 'display: flex; gap: 0.5rem; margin-bottom: 0.5rem;';
+        newInput.innerHTML = `
+            <input type="text" class="competitor-input" placeholder="Enter competitor"
+                   style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; font-family: inherit;">
+            <button onclick="this.parentElement.remove()"
+                    style="width: 32px; height: 32px; background-color: #000; color: white; border: none; border-radius: 16px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; font-weight: 600;">−</button>
+        `;
+        container.appendChild(newInput);
+    });
 }
+
+window.removeValue = function(index) {
+    const inputs = document.querySelectorAll('.value-input');
+    if (inputs[index]) {
+        inputs[index].parentElement.remove();
+    }
+};
+
+window.removeCompetitor = function(index) {
+    const inputs = document.querySelectorAll('.competitor-input');
+    if (inputs[index]) {
+        inputs[index].parentElement.remove();
+    }
+};
 
 // Second API call - Generate logos
 async function generateLogos() {
@@ -255,7 +299,10 @@ async function generateLogos() {
 function displayLogos(logos) {
     console.log('Logos generated:', logos);
 
-    let html = '<div style="text-align: center; margin-bottom: 1rem;"><h3>Generated Logos</h3></div>';
+    // Update modal header
+    document.querySelector('.modal-header h2').textContent = 'Potential Logos';
+
+    let html = '';
 
     logos.forEach((logo, index) => {
         html += `
@@ -304,8 +351,6 @@ window.downloadSVG = function(index) {
 closeModal.addEventListener('click', () => {
     resultsModal.classList.remove('active');
 });
-
-// Close modal when clicking outside
 resultsModal.addEventListener('click', (e) => {
     if (e.target === resultsModal) {
         resultsModal.classList.remove('active');
