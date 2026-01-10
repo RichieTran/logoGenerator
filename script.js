@@ -1,6 +1,6 @@
-const uploadArea = document.getElementById('uploadArea');
+const uploadArea = document.getElementById('JSONinput');
 const fileInput = document.getElementById('fileInput');
-const transcriptInput = document.getElementById('transcriptInput');
+const transcriptInput = document.getElementById('textInput');
 
 // Click to open file picker
 uploadArea.addEventListener('click', () => {
