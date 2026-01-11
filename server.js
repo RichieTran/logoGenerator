@@ -204,7 +204,11 @@ Begin generating the logos now.`
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-    console.log(`Open your browser to http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+        console.log(`Open your browser to http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

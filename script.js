@@ -89,7 +89,7 @@ submitButton.addEventListener('click', async () => {
     try {
         console.log('Making API request...');
 
-        const response = await fetch('http://localhost:3000/api/extract', {
+        const response = await fetch('/api/extract', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -255,7 +255,7 @@ async function generateLogos() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/generate-logos', {
+        const response = await fetch('/api/generate-logos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
